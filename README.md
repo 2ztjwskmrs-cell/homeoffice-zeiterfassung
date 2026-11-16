@@ -35,7 +35,7 @@ Fehlerbehandlung 2 (Doubletten): `UNIQUE`-Regel in Tabelle `Arbeitseintrag`. Gre
 
 Die Datenbank wird nie gelöscht. `CREATE TABLE IF NOT EXISTS` legt Tabellen nur beim allerersten Lauf an, danach wird nur weiter befüllt.
 
-Details: [Datenbankmodell](doku/Datenbankmodell.md) · [Testprotokoll](doku/Testprotokoll.md) · [SQL-Skript](datenbank/erstellen.sql)
+Details: [Datenbankmodell](doku/Datenbankmodell.md) · [Testprotokoll](doku/Testprotokoll.md) · Schema: `SqlTabellen` in [Datenbank.cs](Homeoffice/Datenbank.cs)
 
 ## Projektstruktur
 
@@ -49,7 +49,6 @@ Homeoffice/
   Datenbank.cs                     Load + Auswertungen
   Properties/PublishProfiles/
     Schulrechner.pubxml            Profil für die abzugebende exe
-datenbank/erstellen.sql            Schema zum Nachlesen / für DB Browser
 doku/                              Datenbankmodell, Testprotokoll
 testdaten/                         Excel-Testdateien inkl. Fehlerfälle
 ```

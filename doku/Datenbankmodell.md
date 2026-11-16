@@ -21,7 +21,8 @@ Probleme der Excel-Struktur:
 2. **Dauer selbst berechnet** (`Ende - Beginn`) und als `DauerMinuten` (Ganzzahl) gespeichert. Die Excel-Spalte „Zeit (h)" wird ignoriert. Minuten als Ganzzahl lassen sich mit `SUM` und `MAX` direkt auswerten.
 3. **Stammdaten ausgelagert** in eigene Tabellen (Mitarbeiter, Tätigkeit, Vorgesetzter). Jeder Name steht nur einmal in der Datenbank, Tippfehler-Varianten fallen sofort auf.
 4. **Datum im ISO-Format** `JJJJ-MM-TT` → richtig sortierbar als Text, Standardformat für SQLite.
-5. **Doubletten** über eine `UNIQUE`-Regel auf alle fachlichen Spalten von `Arbeitseintrag`. Beim Einfügen sorgt `INSERT OR IGNORE` dafür, dass ein vorhandener Datensatz nicht noch einmal geschrieben wird. Das wirkt innerhalb einer Datei, zwischen Dateien und bei erneutem Import.
+5. **Ende nie vor Beginn** – zusätzlich als `CHECK (Ende >= Beginn)` im Schema abgesichert.
+6. **Doubletten** über eine `UNIQUE`-Regel auf alle fachlichen Spalten von `Arbeitseintrag`. Beim Einfügen sorgt `INSERT OR IGNORE` dafür, dass ein vorhandener Datensatz nicht noch einmal geschrieben wird. Das wirkt innerhalb einer Datei, zwischen Dateien und bei erneutem Import.
 
 ## Tabellen
 

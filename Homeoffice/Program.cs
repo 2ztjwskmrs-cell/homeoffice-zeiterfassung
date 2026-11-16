@@ -55,10 +55,16 @@ namespace Homeoffice
                         Importieren(ordner);
                         break;
                     case "/show":
+                        Auswerten(ordner, Datenbank.AllesAnzeigen);
+                        break;
                     case "/count":
+                        Auswerten(ordner, Datenbank.AnzahlAnzeigen);
+                        break;
                     case "/max":
+                        Auswerten(ordner, Datenbank.MaximumAnzeigen);
+                        break;
                     case "/time":
-                        Auswerten(befehl, ordner);
+                        Auswerten(ordner, Datenbank.ZeitJeMitarbeiterAnzeigen);
                         break;
                     default:
                         Console.WriteLine("Unbekannter Befehl: " + args[0]);
@@ -89,9 +95,9 @@ namespace Homeoffice
         /// </summary>
         static void Importieren(string ordner)
         {
-            List<string> dateien = ExcelImport.DateienSuchen(ordner);
-            Console.WriteLine(dateien.Count + " Excel-Datei(en) gefunden in " + ordner);
-            if (dateien.Count == 0)
+            string[] dateien = ExcelImport.DateienSuchen(ordner);
+            Console.WriteLine(dateien.Length + " Excel-Datei(en) gefunden in " + ordner);
+            if (dateien.Length == 0)
             {
                 return;
             }
@@ -150,7 +156,11 @@ namespace Homeoffice
             }
         }
 
-        static void Auswerten(string befehl, string ordner)
+        /// <summary>
+        /// Öffnet die Datenbank und führt die übergebene Auswertung aus.
+        /// "auswertung" ist eine Methode als Parameter, z. B. Datenbank.AnzahlAnzeigen.
+        /// </summary>
+        static void Auswerten(string ordner, Action<SQLiteConnection> auswertung)
         {
             if (!File.Exists(Path.Combine(ordner, Datenbank.Dateiname)))
             {
@@ -160,10 +170,7 @@ namespace Homeoffice
 
             using (SQLiteConnection verbindung = Datenbank.Oeffnen(ordner))
             {
-                if (befehl == "/show") Datenbank.AllesAnzeigen(verbindung);
-                if (befehl == "/count") Datenbank.AnzahlAnzeigen(verbindung);
-                if (befehl == "/max") Datenbank.MaximumAnzeigen(verbindung);
-                if (befehl == "/time") Datenbank.ZeitJeMitarbeiterAnzeigen(verbindung);
+                auswertung(verbindung);
             }
         }
 

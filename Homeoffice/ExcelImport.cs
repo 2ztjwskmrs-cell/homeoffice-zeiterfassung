@@ -23,18 +23,10 @@ namespace Homeoffice
         /// <summary>
         /// Sucht alle Dateien homeoffice_*.xlsx im angegebenen Ordner.
         /// </summary>
-        public static List<string> DateienSuchen(string ordner)
+        public static string[] DateienSuchen(string ordner)
         {
-            List<string> liste = new List<string>();
-            foreach (string datei in Directory.GetFiles(ordner, "homeoffice_*.xlsx"))
-            {
-                // Temporäre Sperrdateien von Excel ("~$...") überspringen
-                if (!Path.GetFileName(datei).StartsWith("~$"))
-                {
-                    liste.Add(datei);
-                }
-            }
-            return liste;
+            // Excel-Sperrdateien heißen "~$homeoffice_..." und passen daher nicht auf das Muster
+            return Directory.GetFiles(ordner, "homeoffice_*.xlsx");
         }
 
         /// <summary>

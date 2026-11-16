@@ -32,23 +32,15 @@ namespace Homeoffice
             }
         }
 
+        // Erlaubte Schreibweisen einer Uhrzeit: "8:00" bzw. "08:00", "8.30", nur Stunde "8"
+        static readonly string[] Uhrzeitformate = { @"h\:mm", @"h\.mm", "%h" };
+
         /// <summary>
         /// Wandelt "8", "8:00", "08:00" oder "8.30" in eine Uhrzeit um.
         /// </summary>
         public static TimeSpan UhrzeitLesen(string text)
         {
-            text = text.Trim().Replace('.', ':');
-
-            // Nur Stunde angegeben, z. B. "8" -> "8:00"
-            if (!text.Contains(':'))
-            {
-                text = text + ":00";
-            }
-
-            string[] teile = text.Split(':');
-            int stunden = int.Parse(teile[0], CultureInfo.InvariantCulture);
-            int minuten = int.Parse(teile[1], CultureInfo.InvariantCulture);
-            return new TimeSpan(stunden, minuten, 0);
+            return TimeSpan.ParseExact(text.Trim(), Uhrzeitformate, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
