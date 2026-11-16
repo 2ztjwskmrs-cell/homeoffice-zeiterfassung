@@ -58,8 +58,10 @@ testdaten/                         Excel-Testdateien inkl. Fehlerfälle
 
 - Visual Studio 2022 Community mit Workload „.NET-Desktopentwicklung" (.NET 8)
 - NuGet-Pakete (werden beim Erstellen automatisch geladen):
-  - `ClosedXML` – Excel lesen, ohne dass Excel installiert sein muss
-  - `Microsoft.Data.Sqlite` – SQLite-Zugriff
+  - `ClosedXML` – Excel lesen, ohne dass Excel installiert sein muss (wie Unterrichtsbeispiel `ShowExcelAutomationClosedXML`)
+  - `System.Data.SQLite.Core` – SQLite-Zugriff mit `SQLiteConnection`/`SQLiteCommand` (wie Unterrichtsbeispiel `ShowDBAutomation`)
+
+Abweichung zu den Unterrichtsbeispielen: Die Beispiele nutzen .NET Framework 4.7.2, dieses Projekt .NET 8. Klassen und Methoden von ClosedXML und System.Data.SQLite sind identisch.
 
 ## Bauen und testen
 
@@ -84,17 +86,17 @@ Konsole:
 dotnet publish Homeoffice\Homeoffice.csproj -p:PublishProfile=Schulrechner
 ```
 
-Ergebnis: `abgabe\homeoffice.exe` (ca. 37 MB). Eine einzige Datei, läuft ohne installiertes .NET (self-contained, win-x64).
+Ergebnis: `abgabe\homeoffice.exe` (ca. 12,7 MB). Eine einzige Datei inkl. ClosedXML und SQLite, benötigt die .NET-8-Runtime (auf den Schulrechnern vorhanden).
 
-Ist auf den Schulrechnern die .NET-8-Runtime installiert, geht es auch deutlich kleiner:
+Falls ein Rechner ohne .NET 8 die exe ausführen soll (ca. 37 MB, Runtime eingebaut):
 
 ```bat
-dotnet publish Homeoffice\Homeoffice.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o abgabe
+dotnet publish Homeoffice\Homeoffice.csproj -p:PublishProfile=Schulrechner --self-contained true -p:EnableCompressionInSingleFile=true
 ```
 
 ## Vor der Abgabe
 
 - [ ] Namen in `Program.cs` (`Projektbeteiligte`) eintragen
-- [ ] Test mit den Original-Daten der Lehrkraft
+- [ ] In VS 2022 Community öffnen, erstellen, einmal mit F5 testen
 - [ ] exe auf einem Schulrechner testen
 - [ ] VS-Projekt zippen (ohne `bin`, `obj`, `abgabe`) + `homeoffice.exe` in Moodle hochladen

@@ -13,8 +13,8 @@
   <ItemGroup>
     <!-- Excel-Dateien (.xlsx) lesen, ohne dass Excel installiert sein muss -->
     <PackageReference Include="ClosedXML" Version="0.105.1" />
-    <!-- Zugriff auf die SQLite-Datenbank -->
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.11" />
+    <!-- Zugriff auf die SQLite-Datenbank (wie im Unterrichtsbeispiel ShowDBAutomation) -->
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
   </ItemGroup>
 
 </Project>

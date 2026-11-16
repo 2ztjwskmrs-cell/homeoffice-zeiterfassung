@@ -1,5 +1,5 @@
 using System.Globalization;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
 
 namespace Homeoffice
 {
@@ -48,10 +48,10 @@ namespace Homeoffice
         /// Öffnet die Datenbank im angegebenen Ordner. Existiert sie noch nicht,
         /// legt SQLite die Datei an und die Tabellen werden erstellt.
         /// </summary>
-        public static SqliteConnection Oeffnen(string ordner)
+        public static SQLiteConnection Oeffnen(string ordner)
         {
             string pfad = Path.Combine(ordner, Dateiname);
-            SqliteConnection verbindung = new SqliteConnection("Data Source=" + pfad);
+            SQLiteConnection verbindung = new SQLiteConnection("Data Source=" + pfad);
             verbindung.Open();
 
             Ausfuehren(verbindung, null, "PRAGMA foreign_keys = ON;");
@@ -67,7 +67,7 @@ namespace Homeoffice
         /// Schreibt einen Eintrag in die Datenbank.
         /// Rückgabe: true = neu eingefügt, false = Doublette (war schon vorhanden).
         /// </summary>
-        public static bool EintragSpeichern(SqliteConnection verbindung, SqliteTransaction transaktion, Eintrag e)
+        public static bool EintragSpeichern(SQLiteConnection verbindung, SQLiteTransaction transaktion, Eintrag e)
         {
             long mitarbeiterId = IdHolen(verbindung, transaktion,
                 "INSERT OR IGNORE INTO Mitarbeiter (Nachname, Vorname) VALUES ($a, $b);",
@@ -84,7 +84,7 @@ namespace Homeoffice
                 "SELECT VorgesetzterID FROM Vorgesetzter WHERE Nachname = $a;",
                 e.Vorgesetzter, null);
 
-            SqliteCommand befehl = verbindung.CreateCommand();
+            SQLiteCommand befehl = verbindung.CreateCommand();
             befehl.Transaction = transaktion;
             // INSERT OR IGNORE: verletzt der Datensatz die UNIQUE-Regel (Doublette),
             // wird er einfach nicht eingefügt.
@@ -108,22 +108,22 @@ namespace Homeoffice
         /// Legt einen Stammdatensatz (Mitarbeiter, Tätigkeit, Vorgesetzter) an,
         /// falls es ihn noch nicht gibt, und liefert dessen ID zurück.
         /// </summary>
-        static long IdHolen(SqliteConnection verbindung, SqliteTransaction transaktion,
+        static long IdHolen(SQLiteConnection verbindung, SQLiteTransaction transaktion,
                             string sqlEinfuegen, string sqlSuchen, string wertA, string wertB)
         {
-            SqliteCommand einfuegen = verbindung.CreateCommand();
+            SQLiteCommand einfuegen = verbindung.CreateCommand();
             einfuegen.Transaction = transaktion;
             einfuegen.CommandText = sqlEinfuegen;
             einfuegen.Parameters.AddWithValue("$a", wertA);
             if (wertB != null) einfuegen.Parameters.AddWithValue("$b", wertB);
             einfuegen.ExecuteNonQuery();
 
-            SqliteCommand suchen = verbindung.CreateCommand();
+            SQLiteCommand suchen = verbindung.CreateCommand();
             suchen.Transaction = transaktion;
             suchen.CommandText = sqlSuchen;
             suchen.Parameters.AddWithValue("$a", wertA);
             if (wertB != null) suchen.Parameters.AddWithValue("$b", wertB);
-            return (long)suchen.ExecuteScalar();
+            return Convert.ToInt64(suchen.ExecuteScalar());
         }
 
         // ------------------------------------------------------------------
@@ -131,9 +131,9 @@ namespace Homeoffice
         // ------------------------------------------------------------------
 
         /// <summary>/show – komplette Tabelle ausgeben.</summary>
-        public static void AllesAnzeigen(SqliteConnection verbindung)
+        public static void AllesAnzeigen(SQLiteConnection verbindung)
         {
-            SqliteCommand befehl = verbindung.CreateCommand();
+            SQLiteCommand befehl = verbindung.CreateCommand();
             befehl.CommandText = @"
                 SELECT m.Nachname, m.Vorname, a.Datum, t.Bezeichnung,
                        a.Beginn, a.Ende, a.DauerMinuten, v.Nachname
@@ -149,7 +149,7 @@ namespace Homeoffice
             Console.WriteLine(new string('-', 103));
 
             int anzahl = 0;
-            using (SqliteDataReader leser = befehl.ExecuteReader())
+            using (SQLiteDataReader leser = befehl.ExecuteReader())
             {
                 while (leser.Read())
                 {
@@ -169,11 +169,11 @@ namespace Homeoffice
         }
 
         /// <summary>/count – Anzahl der Einträge.</summary>
-        public static void AnzahlAnzeigen(SqliteConnection verbindung)
+        public static void AnzahlAnzeigen(SQLiteConnection verbindung)
         {
-            SqliteCommand befehl = verbindung.CreateCommand();
+            SQLiteCommand befehl = verbindung.CreateCommand();
             befehl.CommandText = "SELECT COUNT(*) FROM Arbeitseintrag;";
-            long anzahl = (long)befehl.ExecuteScalar();
+            long anzahl = Convert.ToInt64(befehl.ExecuteScalar());
             Console.WriteLine("Anzahl Einträge: " + anzahl);
         }
 
@@ -181,9 +181,9 @@ namespace Homeoffice
         /// /max – längste Arbeitszeit mit Datum.
         /// Haben mehrere Einträge die gleiche (längste) Dauer, werden alle ausgegeben.
         /// </summary>
-        public static void MaximumAnzeigen(SqliteConnection verbindung)
+        public static void MaximumAnzeigen(SQLiteConnection verbindung)
         {
-            SqliteCommand befehl = verbindung.CreateCommand();
+            SQLiteCommand befehl = verbindung.CreateCommand();
             befehl.CommandText = @"
                 SELECT a.DauerMinuten, a.Datum, a.Beginn, a.Ende, m.Nachname, m.Vorname, t.Bezeichnung
                 FROM Arbeitseintrag a
@@ -193,7 +193,7 @@ namespace Homeoffice
                 ORDER BY a.Datum;";
 
             bool gefunden = false;
-            using (SqliteDataReader leser = befehl.ExecuteReader())
+            using (SQLiteDataReader leser = befehl.ExecuteReader())
             {
                 while (leser.Read())
                 {
@@ -216,9 +216,9 @@ namespace Homeoffice
         }
 
         /// <summary>/time – Gesamtarbeitszeit je Mitarbeiter.</summary>
-        public static void ZeitJeMitarbeiterAnzeigen(SqliteConnection verbindung)
+        public static void ZeitJeMitarbeiterAnzeigen(SQLiteConnection verbindung)
         {
-            SqliteCommand befehl = verbindung.CreateCommand();
+            SQLiteCommand befehl = verbindung.CreateCommand();
             befehl.CommandText = @"
                 SELECT m.Nachname, m.Vorname, SUM(a.DauerMinuten)
                 FROM Mitarbeiter m
@@ -229,7 +229,7 @@ namespace Homeoffice
             string format = "{0,-15} {1,-12} {2,12}";
             Console.WriteLine(format, "Nachname", "Vorname", "Gesamt (h)");
             Console.WriteLine(new string('-', 41));
-            using (SqliteDataReader leser = befehl.ExecuteReader())
+            using (SQLiteDataReader leser = befehl.ExecuteReader())
             {
                 while (leser.Read())
                 {
@@ -243,9 +243,9 @@ namespace Homeoffice
         // Kleine Helfer
         // ------------------------------------------------------------------
 
-        static void Ausfuehren(SqliteConnection verbindung, SqliteTransaction transaktion, string sql)
+        static void Ausfuehren(SQLiteConnection verbindung, SQLiteTransaction transaktion, string sql)
         {
-            SqliteCommand befehl = verbindung.CreateCommand();
+            SQLiteCommand befehl = verbindung.CreateCommand();
             befehl.Transaction = transaktion;
             befehl.CommandText = sql;
             befehl.ExecuteNonQuery();

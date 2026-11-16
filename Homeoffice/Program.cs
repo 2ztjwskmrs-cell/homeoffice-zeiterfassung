@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
 
 namespace Homeoffice
 {
@@ -101,11 +101,11 @@ namespace Homeoffice
             int doubletten = 0;
             int fehlerhafteDateien = 0;
 
-            using (SqliteConnection verbindung = Datenbank.Oeffnen(ordner))
+            using (SQLiteConnection verbindung = Datenbank.Oeffnen(ordner))
             {
                 // Eine Transaktion für den ganzen Import: bei vielen Dateien
                 // um ein Vielfaches schneller als jeder INSERT einzeln.
-                using (SqliteTransaction transaktion = verbindung.BeginTransaction())
+                using (SQLiteTransaction transaktion = verbindung.BeginTransaction())
                 {
                     foreach (string datei in dateien)
                     {
@@ -158,7 +158,7 @@ namespace Homeoffice
                 return;
             }
 
-            using (SqliteConnection verbindung = Datenbank.Oeffnen(ordner))
+            using (SQLiteConnection verbindung = Datenbank.Oeffnen(ordner))
             {
                 if (befehl == "/show") Datenbank.AllesAnzeigen(verbindung);
                 if (befehl == "/count") Datenbank.AnzahlAnzeigen(verbindung);

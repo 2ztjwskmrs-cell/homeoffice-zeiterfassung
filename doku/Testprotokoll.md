@@ -59,5 +59,5 @@ Schröder        Jörg         05.09.2024 Online-Meeting            10:00 - 11:3
 
 ## Offen
 
-- Test mit den Original-ZIP-Daten der Lehrkraft (Massentest, Laufzeit messen).
+- Test in Visual Studio 2022 Community unter Windows.
 - Test der veröffentlichten `homeoffice.exe` auf einem Schulrechner.
