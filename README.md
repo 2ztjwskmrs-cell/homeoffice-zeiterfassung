@@ -95,7 +95,7 @@ dotnet publish Homeoffice\Homeoffice.csproj -p:PublishProfile=Schulrechner --sel
 
 ## Vor der Abgabe
 
-- [ ] Namen in `Program.cs` (`Projektbeteiligte`) eintragen
+- [x] Namen in `Program.cs` (`Projektbeteiligte`) eintragen
 - [ ] In VS 2022 Community öffnen, erstellen, einmal mit F5 testen
 - [ ] exe auf einem Schulrechner testen
 - [ ] VS-Projekt zippen (ohne `bin`, `obj`, `abgabe`) + `homeoffice.exe` in Moodle hochladen
