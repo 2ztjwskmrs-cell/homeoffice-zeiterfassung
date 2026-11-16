@@ -23,42 +23,9 @@ Probleme der Excel-Struktur:
 4. **Datum im ISO-Format** `JJJJ-MM-TT` → richtig sortierbar als Text, Standardformat für SQLite.
 5. **Doubletten** über eine `UNIQUE`-Regel auf alle fachlichen Spalten von `Arbeitseintrag`. Beim Einfügen sorgt `INSERT OR IGNORE` dafür, dass ein vorhandener Datensatz nicht noch einmal geschrieben wird. Das wirkt innerhalb einer Datei, zwischen Dateien und bei erneutem Import.
 
-## ER-Modell
+## Tabellen
 
-```mermaid
-erDiagram
-    Mitarbeiter  ||--o{ Arbeitseintrag : "erfasst"
-    Taetigkeit   ||--o{ Arbeitseintrag : "ist Art von"
-    Vorgesetzter ||--o{ Arbeitseintrag : "ist zuständig für"
-
-    Mitarbeiter {
-        INTEGER MitarbeiterID PK
-        TEXT Nachname
-        TEXT Vorname
-    }
-    Taetigkeit {
-        INTEGER TaetigkeitID PK
-        TEXT Bezeichnung
-    }
-    Vorgesetzter {
-        INTEGER VorgesetzterID PK
-        TEXT Nachname
-    }
-    Arbeitseintrag {
-        INTEGER EintragID PK
-        INTEGER MitarbeiterID FK
-        TEXT Datum
-        TEXT Beginn
-        TEXT Ende
-        INTEGER DauerMinuten
-        INTEGER TaetigkeitID FK
-        INTEGER VorgesetzterID FK
-    }
-```
-
-Kardinalitäten: Ein Mitarbeiter hat beliebig viele Arbeitseinträge (1:n). Gleiches gilt für Tätigkeit und Vorgesetzter.
-
-## Relationenschema
+Jede Tabelle steht mit einer 1:n-Beziehung zu `Arbeitseintrag` (ein Mitarbeiter, eine Tätigkeit bzw. ein Vorgesetzter kommt in beliebig vielen Einträgen vor).
 
 - **Mitarbeiter** (<u>MitarbeiterID</u>, Nachname, Vorname)
 - **Taetigkeit** (<u>TaetigkeitID</u>, Bezeichnung)

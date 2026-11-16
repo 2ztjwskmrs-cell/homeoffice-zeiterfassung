@@ -56,7 +56,7 @@ testdaten/                         Excel-Testdateien inkl. Fehlerfälle
 
 ## Voraussetzungen
 
-- Visual Studio 2022 mit Workload „.NET-Desktopentwicklung" (.NET 8)
+- Visual Studio 2022 Community mit Workload „.NET-Desktopentwicklung" (.NET 8)
 - NuGet-Pakete (werden beim Erstellen automatisch geladen):
   - `ClosedXML` – Excel lesen, ohne dass Excel installiert sein muss
   - `Microsoft.Data.Sqlite` – SQLite-Zugriff
