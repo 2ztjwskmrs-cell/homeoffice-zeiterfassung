@@ -13,11 +13,11 @@ namespace Homeoffice
     /// </summary>
     class Program
     {
-        // TODO: Namen der Projektbeteiligten eintragen
         static readonly string[] Projektbeteiligte =
         {
-            "Vorname Nachname (Teammitglied 1)",
-            "Vorname Nachname (Teammitglied 2)",
+            "Sebastian Otte",
+            "Tristan Heesch",
+            "Kacper Szoka",
         };
 
         static int Main(string[] args)
