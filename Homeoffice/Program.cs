@@ -15,9 +15,9 @@ namespace Homeoffice
     {
         static readonly string[] Projektbeteiligte =
         {
-            "Sebastian",
-            "Tristan",
-            "Kacper",
+            "Sebastian Otte",
+            "Tristan Heesch",
+            "Kacper Szoka",
         };
 
         static int Main(string[] args)
