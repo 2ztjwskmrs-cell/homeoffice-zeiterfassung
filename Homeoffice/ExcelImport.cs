@@ -21,12 +21,25 @@ namespace Homeoffice
         const int SpalteVorgesetzter = 5; // E
 
         /// <summary>
-        /// Sucht alle Dateien homeoffice_*.xlsx im angegebenen Ordner.
+        /// Sucht alle Dateien homeoffice_*.xlsx bzw. homeoffice-*.xlsx im angegebenen Ordner.
+        /// Nach "homeoffice" muss ein Unterstrich oder Bindestrich folgen, danach ist
+        /// beides gemischt erlaubt (z. B. "Homeoffice-Mustermann_Max_1.xlsx").
+        /// Groß-/Kleinschreibung spielt keine Rolle.
         /// </summary>
         public static string[] DateienSuchen(string ordner)
         {
             // Excel-Sperrdateien heißen "~$homeoffice_..." und passen daher nicht auf das Muster
-            return Directory.GetFiles(ordner, "homeoffice_*.xlsx");
+            List<string> treffer = new List<string>();
+            foreach (string pfad in Directory.GetFiles(ordner, "*.xlsx"))
+            {
+                string name = Path.GetFileName(pfad).ToLower();
+                if (name.StartsWith("homeoffice_") || name.StartsWith("homeoffice-"))
+                {
+                    treffer.Add(pfad);
+                }
+            }
+            treffer.Sort();
+            return treffer.ToArray();
         }
 
         /// <summary>
