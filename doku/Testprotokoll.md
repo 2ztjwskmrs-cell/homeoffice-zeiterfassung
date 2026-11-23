@@ -64,3 +64,13 @@ Schröder        Jörg         05.09.2024 Online-Meeting            10:00 - 11:3
 
 - Test in Visual Studio 2022 Community unter Windows.
 - Test der veröffentlichten `homeoffice.exe` auf einem Schulrechner.
+
+## Erweiterte Testdaten
+
+Ordner [`testdaten/erweitert/`](../testdaten/erweitert): 16 weitere Dateien mit 9 zusätzlichen Mitarbeitern (1 bis 35 Zeilen je Mitarbeiter, Einträge von 0:15 bis 14:30 h), einer leeren, einer defekten und zwei nicht passenden Dateien. Erzeugt mit `erzeuge_testdaten.py` (fester Zufalls-Seed, aus der Musterdatei abgeleitet). Erwartete Ergebnisse für `/imp`, `/count`, `/max` und `/time`: [`erwartung.md`](../testdaten/erweitert/erwartung.md).
+
+| Nr. | Aufruf | Erwartet | Ergebnis |
+|---|---|---|---|
+| 12 | `homeoffice.exe /imp testdaten\erweitert` (leere DB) | 14 Dateien, 120 gelesen, 113 neu, 7 Doubletten, 1 fehlerhafte Datei | offen |
+| 13 | `homeoffice.exe /max` nach Nr. 12 | 14:30 h am 23.09.2024 (Krüger, 06:00 - 20:30) | offen |
+| 14 | `homeoffice.exe /time` nach Nr. 12 | Werte laut `erwartung.md`, Szenario A | offen |
