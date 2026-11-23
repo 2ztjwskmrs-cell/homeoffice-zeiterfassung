@@ -64,12 +64,22 @@ namespace Homeoffice
                     Eintrag e = new Eintrag();
                     e.Nachname = nachname;
                     e.Vorname = vorname;
-                    e.Datum = DatumLesen(blatt.Cell(zeile, SpalteDatum));
                     e.Taetigkeit = blatt.Cell(zeile, SpalteTaetigkeit).GetFormattedString().Trim();
                     e.Vorgesetzter = blatt.Cell(zeile, SpalteVorgesetzter).GetFormattedString().Trim();
 
-                    string arbeitszeit = blatt.Cell(zeile, SpalteArbeitszeit).GetFormattedString();
-                    ZeitHelfer.ZeitspanneLesen(arbeitszeit, out e.Beginn, out e.Ende);
+                    try
+                    {
+                        e.Datum = DatumLesen(blatt.Cell(zeile, SpalteDatum));
+                        // Arbeitszeit als Text lesen: egal ob die Zelle als Text oder als
+                        // Uhrzeit formatiert ist, der Inhalt "8:00 - 12:00" ist immer Text.
+                        string arbeitszeit = blatt.Cell(zeile, SpalteArbeitszeit).GetString();
+                        ZeitHelfer.ZeitspanneLesen(arbeitszeit, out e.Beginn, out e.Ende);
+                    }
+                    catch (FormatException ex)
+                    {
+                        // Zeilennummer mitgeben, damit man den Fehler in Excel schnell findet
+                        throw new FormatException("Zeile " + zeile + ": " + ex.Message);
+                    }
 
                     eintraege.Add(e);
                     zeile++;
@@ -79,9 +89,13 @@ namespace Homeoffice
             return eintraege;
         }
 
+        // Erlaubte Schreibweisen, wenn das Datum als Text in der Zelle steht
+        // ("d.M." deckt auch "01.09." ab)
+        static readonly string[] Datumsformate = { "d.M.yyyy", "d.M.yy" };
+
         /// <summary>
         /// Das Datum steht meist als echtes Excel-Datum in der Zelle,
-        /// zur Sicherheit wird auch Text wie "01.09.2024" verstanden.
+        /// zur Sicherheit wird auch Text wie "01.09.2024", "1.9.2024" oder "01.09.24" verstanden.
         /// </summary>
         static DateTime DatumLesen(IXLCell zelle)
         {
@@ -94,8 +108,15 @@ namespace Homeoffice
                 // Excel speichert Datumswerte intern als Zahl (Tage seit 1900)
                 return DateTime.FromOADate(zelle.GetDouble()).Date;
             }
-            return DateTime.ParseExact(zelle.GetFormattedString().Trim(), "dd.MM.yyyy",
-                                       CultureInfo.InvariantCulture);
+
+            string text = zelle.GetString().Trim();
+            DateTime datum;
+            if (DateTime.TryParseExact(text, Datumsformate, CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None, out datum))
+            {
+                return datum;
+            }
+            throw new FormatException("Datum nicht lesbar: '" + text + "'");
         }
     }
 }

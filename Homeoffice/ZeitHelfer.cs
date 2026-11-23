@@ -14,7 +14,8 @@ namespace Homeoffice
         /// </summary>
         public static void ZeitspanneLesen(string text, out TimeSpan beginn, out TimeSpan ende)
         {
-            string[] teile = text.Split('-');
+            // Trennzeichen: Bindestrich "-" oder Gedankenstrich "–" (z. B. aus Word kopiert)
+            string[] teile = text.Split('-', '–');
             if (teile.Length != 2)
             {
                 throw new FormatException("Arbeitszeit nicht lesbar: '" + text + "'");
@@ -32,15 +33,20 @@ namespace Homeoffice
             }
         }
 
-        // Erlaubte Schreibweisen einer Uhrzeit: "8:00" bzw. "08:00", "8.30", nur Stunde "8"
-        static readonly string[] Uhrzeitformate = { @"h\:mm", @"h\.mm", "%h" };
+        // Erlaubte Schreibweisen einer Uhrzeit: "8:00" bzw. "08:00", "08:00:00", "8.30", nur Stunde "8"
+        static readonly string[] Uhrzeitformate = { @"h\:mm", @"h\:mm\:ss", @"h\.mm", "%h" };
 
         /// <summary>
-        /// Wandelt "8", "8:00", "08:00" oder "8.30" in eine Uhrzeit um.
+        /// Wandelt "8", "8:00", "08:00", "08:00:00" oder "8.30" in eine Uhrzeit um.
         /// </summary>
         public static TimeSpan UhrzeitLesen(string text)
         {
-            return TimeSpan.ParseExact(text.Trim(), Uhrzeitformate, CultureInfo.InvariantCulture);
+            TimeSpan zeit;
+            if (TimeSpan.TryParseExact(text.Trim(), Uhrzeitformate, CultureInfo.InvariantCulture, out zeit))
+            {
+                return zeit;
+            }
+            throw new FormatException("Uhrzeit nicht lesbar: '" + text.Trim() + "'");
         }
 
         /// <summary>
