@@ -11,14 +11,16 @@ Testdaten: Ordner [`testdaten/`](../testdaten). Datenbank vor Test 1 gelöscht.
 | `homeoffice_Schröder_Jörg_1.xlsx` | 4 Zeilen | Umlaute im Namen, doppelte Zeile, `17:00 - 9:00` vertauscht, `10-11:30` |
 | `homeoffice_Meier_Anna_1.xlsx` | 2 Zeilen | Gleiche Tätigkeit/Zeit wie Mustermann → darf **keine** Doublette sein |
 | `homeoffice_Meier_Anna_2.xlsx` | 1 Zeile | Wie Meier_1 Zeile 2, aber Zeiten vertauscht → **ist** Doublette |
+| `Homeoffice-Stundenzettel-Muster.xlsx` | 7 Zeilen, erhaltene Musterdatei | Bindestriche + Großschreibung im Dateinamen werden erkannt; Inhalt wie Mustermann_1 → 7 Doubletten |
+| `homeoffice-Meier_Anna_3.xlsx` | 1 Zeile, Kopie von Meier_2 | Mischform `-`/`_` im Dateinamen wird erkannt → 1 Doublette |
 
 ## Testfälle
 
 | Nr. | Aufruf | Erwartet | Ergebnis |
 |---|---|---|---|
 | 1 | `homeoffice.exe /n` | Namen der Projektbeteiligten | ok |
-| 2 | `homeoffice.exe /imp` | 17 Zeilen gelesen, 13 neu, 4 Doubletten | ok |
-| 3 | `homeoffice.exe /imp` (erneut) | 17 gelesen, 0 neu, 17 Doubletten, Datenbank nicht neu erzeugt | ok |
+| 2 | `homeoffice.exe /imp` | 7 Dateien gefunden, 25 Zeilen gelesen, 13 neu, 12 Doubletten | ok |
+| 3 | `homeoffice.exe /imp` (erneut) | 25 gelesen, 0 neu, 25 Doubletten, Datenbank nicht neu erzeugt | ok |
 | 4 | `homeoffice.exe /show` | 13 Einträge, alle Zeiten Beginn < Ende | ok |
 | 5 | `homeoffice.exe /count` | `Anzahl Einträge: 13` | ok |
 | 6 | `homeoffice.exe /max` | 8:00 h am 03.09.2024 (Schröder, 09:00 - 17:00) | ok |
@@ -26,6 +28,7 @@ Testdaten: Ordner [`testdaten/`](../testdaten). Datenbank vor Test 1 gelöscht.
 | 8 | `homeoffice.exe /xyz` | Meldung „Unbekannter Befehl" + Hilfe | ok |
 | 9 | `homeoffice.exe /count` ohne Datenbank | Hinweis „zuerst /imp ausführen" | ok |
 | 10 | `homeoffice.exe` ohne Parameter | Hilfe | ok |
+| 11 | `/imp` mit `~$homeoffice-x.xlsx` und `homeofficex.xlsx` im Ordner | Beide ignoriert (Sperrdatei bzw. kein Trennzeichen), weiterhin 7 Dateien | ok |
 
 ## Nachrechnung Testfall 7
 

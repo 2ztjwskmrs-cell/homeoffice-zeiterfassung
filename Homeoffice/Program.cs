@@ -179,7 +179,7 @@ namespace Homeoffice
             Console.WriteLine("Aufruf: homeoffice.exe /befehl [Ordner]");
             Console.WriteLine();
             Console.WriteLine("  /n      Namen der Projektbeteiligten ausgeben");
-            Console.WriteLine("  /imp    Alle Excel-Dateien (homeoffice_*.xlsx) importieren");
+            Console.WriteLine("  /imp    Alle Excel-Dateien (homeoffice_*.xlsx bzw. homeoffice-*.xlsx) importieren");
             Console.WriteLine("  /show   Komplette Tabelle ausgeben");
             Console.WriteLine("  /count  Anzahl der Einträge ausgeben");
             Console.WriteLine("  /max    Längste Arbeitszeit mit Datum ausgeben");

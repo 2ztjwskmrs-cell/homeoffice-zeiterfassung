@@ -9,11 +9,13 @@ Abgabe: 14.12.2026 vor Beginn der LF08-Stunde (Moodle).
 | Aufruf | Funktion |
 |---|---|
 | `homeoffice.exe /n` | Namen der Projektbeteiligten |
-| `homeoffice.exe /imp` | Alle `homeoffice_*.xlsx` im Ordner importieren |
+| `homeoffice.exe /imp` | Alle `homeoffice_*.xlsx` bzw. `homeoffice-*.xlsx` im Ordner importieren |
 | `homeoffice.exe /show` | Komplette Tabelle |
 | `homeoffice.exe /count` | Anzahl der Einträge |
 | `homeoffice.exe /max` | Längste Arbeitszeit mit Datum |
 | `homeoffice.exe /time` | Gesamtarbeitszeit je Mitarbeiter |
+
+Dateinamen: Nach `homeoffice` muss `_` oder `-` folgen, danach sind beide Trennzeichen gemischt erlaubt (z. B. `Homeoffice-Stundenzettel-Muster.xlsx`, `homeoffice-Meier_Anna_3.xlsx`). Groß-/Kleinschreibung egal.
 
 Gearbeitet wird im **aktuellen Verzeichnis**: dort liegen die Excel-Dateien und dort entsteht `homeoffice.db`. Optional als zweiter Parameter ein anderer Ordner:
 
