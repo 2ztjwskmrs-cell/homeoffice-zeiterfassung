@@ -13,22 +13,25 @@ Testdaten: Ordner [`testdaten/`](../testdaten). Datenbank vor Test 1 gelöscht.
 | `homeoffice_Meier_Anna_2.xlsx` | 1 Zeile | Wie Meier_1 Zeile 2, aber Zeiten vertauscht → **ist** Doublette |
 | `Homeoffice-Stundenzettel-Muster.xlsx` | 7 Zeilen, erhaltene Musterdatei | Bindestriche + Großschreibung im Dateinamen werden erkannt; Inhalt wie Mustermann_1 → 7 Doubletten |
 | `homeoffice-Meier_Anna_3.xlsx` | 1 Zeile, Kopie von Meier_2 | Mischform `-`/`_` im Dateinamen wird erkannt → 1 Doublette |
+| `homeoffice_Weber_Lena_1.xlsx` | 5 Zeilen, **alle Zellen als Text formatiert** | Datum als Text (`01.09.2024`, `2.9.2024`, `04.09.24`), Arbeitszeit `13:00 – 15:30` (Gedankenstrich), `9-10`, ` 16:00 - 14:00 ` (vertauscht, Leerzeichen), `08:00:00-09:30:00` |
 
 ## Testfälle
 
 | Nr. | Aufruf | Erwartet | Ergebnis |
 |---|---|---|---|
 | 1 | `homeoffice.exe /n` | Namen der Projektbeteiligten | ok |
-| 2 | `homeoffice.exe /imp` | 7 Dateien gefunden, 25 Zeilen gelesen, 13 neu, 12 Doubletten | ok |
-| 3 | `homeoffice.exe /imp` (erneut) | 25 gelesen, 0 neu, 25 Doubletten, Datenbank nicht neu erzeugt | ok |
-| 4 | `homeoffice.exe /show` | 13 Einträge, alle Zeiten Beginn < Ende | ok |
-| 5 | `homeoffice.exe /count` | `Anzahl Einträge: 13` | ok |
+| 2 | `homeoffice.exe /imp` | 8 Dateien gefunden, 30 Zeilen gelesen, 18 neu, 12 Doubletten | ok |
+| 3 | `homeoffice.exe /imp` (erneut) | 30 gelesen, 0 neu, 30 Doubletten, Datenbank nicht neu erzeugt | ok |
+| 4 | `homeoffice.exe /show` | 18 Einträge, alle Zeiten Beginn < Ende | ok |
+| 5 | `homeoffice.exe /count` | `Anzahl Einträge: 18` | ok |
 | 6 | `homeoffice.exe /max` | 8:00 h am 03.09.2024 (Schröder, 09:00 - 17:00) | ok |
-| 7 | `homeoffice.exe /time` | Meier 9:30, Mustermann 29:45, Schröder 13:30 | ok |
+| 7 | `homeoffice.exe /time` | Meier 9:30, Mustermann 29:45, Schröder 13:30, Weber 11:00 | ok |
 | 8 | `homeoffice.exe /xyz` | Meldung „Unbekannter Befehl" + Hilfe | ok |
 | 9 | `homeoffice.exe /count` ohne Datenbank | Hinweis „zuerst /imp ausführen" | ok |
 | 10 | `homeoffice.exe` ohne Parameter | Hilfe | ok |
-| 11 | `/imp` mit `~$homeoffice-x.xlsx` und `homeofficex.xlsx` im Ordner | Beide ignoriert (Sperrdatei bzw. kein Trennzeichen), weiterhin 7 Dateien | ok |
+| 11 | `/imp` mit `~$homeoffice-x.xlsx` und `homeofficex.xlsx` im Ordner | Beide ignoriert (Sperrdatei bzw. kein Trennzeichen), weiterhin 8 Dateien | ok |
+| 12 | Musterdatei mit allen Zellen auf Format Text umgestellt, `/imp` in leerem Ordner | 7 gelesen, 6 neu, 1 Doublette, `/time` Mustermann 21:45 | ok |
+| 13 | Datei mit Datum `31.02.2024` bzw. Arbeitszeit `9 bis 10` | Datei übersprungen mit Meldung „Zeile 9: Datum nicht lesbar" bzw. „Zeile 10: Arbeitszeit nicht lesbar" | ok |
 
 ## Nachrechnung Testfall 7
 
@@ -37,6 +40,8 @@ Mustermann: 4:00 + 2:00 + 4:15 + 5:00 + 3:00 + 3:30 (Datei 1, Doublette nur einm
 Meier: 4:00 + 5:30 = **9:30**
 
 Schröder: 4:00 + 8:00 + 1:30 = **13:30**
+
+Weber: 4:00 + 2:30 + 1:00 + 2:00 + 1:30 = **11:00**
 
 ## Ausgabe `/show`
 
@@ -56,8 +61,13 @@ Mustermann      Max          10.09.2024 Online-Meeting            09:30 - 11:00 
 Schröder        Jörg         02.09.2024 Hotlineunterstützung      08:00 - 12:00    4:00 Petersen
 Schröder        Jörg         03.09.2024 Netzwerkdokumentation     09:00 - 17:00    8:00 Franzen
 Schröder        Jörg         05.09.2024 Online-Meeting            10:00 - 11:30    1:30 Müller
+Weber           Lena         01.09.2024 Scripterstellung          08:00 - 12:00    4:00 Hansen
+Weber           Lena         02.09.2024 Online-Meeting            13:00 - 15:30    2:30 Hansen
+Weber           Lena         03.09.2024 Switchkonfiguration       09:00 - 10:00    1:00 Müller
+Weber           Lena         04.09.2024 Hotlineunterstützung      14:00 - 16:00    2:00 Petersen
+Weber           Lena         05.09.2024 Netzwerkdokumentation     08:00 - 09:30    1:30 Franzen
 -------------------------------------------------------------------------------------------------------
-13 Einträge
+18 Einträge
 ```
 
 ## Offen

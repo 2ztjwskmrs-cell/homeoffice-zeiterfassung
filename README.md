@@ -29,6 +29,8 @@ homeoffice.exe /imp C:\Daten\Homeoffice
 |---|---|---|
 | **Extract** | Excel-Dateien mit ClosedXML lesen, Name/Vorname aus B3/B4, Daten ab Zeile 7 | `ExcelImport.cs` |
 | **Transform** | Arbeitszeit in Beginn/Ende zerlegen, vertauschte Zeiten tauschen, Dauer berechnen | `ZeitHelfer.cs` |
+
+Zellformat egal: Arbeitszeit und Datum werden erkannt, ob die Zelle als Text, Uhrzeit oder Datum formatiert ist. Erlaubt sind z. B. `8-12:00`, `08:00 - 12:15`, `13:00 – 15:30`, `08:00:00-09:30:00` sowie Datum `01.09.2024`, `1.9.2024`, `01.09.24`. Nicht lesbare Zeilen nennen Datei und Zeilennummer, die Datei wird dann komplett übersprungen.
 | **Load** | In SQLite schreiben, Doubletten per `UNIQUE` + `INSERT OR IGNORE` verwerfen | `Datenbank.cs` |
 
 Fehlerbehandlung 1 (vertauschte Zeiten): `ZeitHelfer.ZeitspanneLesen` – ist Ende < Beginn, werden beide getauscht.
@@ -49,6 +51,7 @@ Homeoffice/
   ZeitHelfer.cs                    Transform (Zeiten)
   Eintrag.cs                       Datenklasse für eine Zeile
   Datenbank.cs                     Load + Auswertungen
+  Properties/launchSettings.json   Startprofile für F5 (Hauptordner, testdaten)
   Properties/PublishProfiles/
     Schulrechner.pubxml            Profil für die abzugebende exe
 doku/                              Datenbankmodell, Testprotokoll
@@ -66,7 +69,16 @@ Abweichung zu den Unterrichtsbeispielen: Die Beispiele nutzen .NET Framework 4.7
 
 ## Bauen und testen
 
-In Visual Studio: `Homeoffice.sln` öffnen → Projekteigenschaften → Debuggen → Befehlszeilenargumente z. B. `/imp ..\..\..\..\testdaten` → F5.
+In Visual Studio: `Homeoffice.sln` öffnen, oben neben dem grünen Start-Pfeil ein Startprofil wählen, F5.
+
+| Startprofil | Arbeitet in |
+|---|---|
+| `imp (Hauptordner)`, `show (Hauptordner)`, `count …`, `max …`, `time …`, `n` | Hauptordner (dort, wo `Homeoffice.sln` liegt) |
+| `imp (testdaten)`, `show (testdaten)` | Ordner `testdaten` |
+
+Excel-Dateien also einfach in den Hauptordner legen, `homeoffice.db` entsteht ebenfalls dort. Kein Wechsel nach `bin\Debug\net8.0` nötig. Die Profile stehen in `Homeoffice/Properties/launchSettings.json`.
+
+Die abgegebene `homeoffice.exe` arbeitet unverändert im aktuellen Verzeichnis (bzw. im Ordner aus dem zweiten Parameter).
 
 Oder in der Konsole:
 

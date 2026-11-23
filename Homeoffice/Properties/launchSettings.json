@@ -1,0 +1,44 @@
+{
+  "profiles": {
+    "imp (Hauptordner)": {
+      "commandName": "Project",
+      "commandLineArgs": "/imp",
+      "workingDirectory": "$(ProjectDir).."
+    },
+    "show (Hauptordner)": {
+      "commandName": "Project",
+      "commandLineArgs": "/show",
+      "workingDirectory": "$(ProjectDir).."
+    },
+    "count (Hauptordner)": {
+      "commandName": "Project",
+      "commandLineArgs": "/count",
+      "workingDirectory": "$(ProjectDir).."
+    },
+    "max (Hauptordner)": {
+      "commandName": "Project",
+      "commandLineArgs": "/max",
+      "workingDirectory": "$(ProjectDir).."
+    },
+    "time (Hauptordner)": {
+      "commandName": "Project",
+      "commandLineArgs": "/time",
+      "workingDirectory": "$(ProjectDir).."
+    },
+    "n": {
+      "commandName": "Project",
+      "commandLineArgs": "/n",
+      "workingDirectory": "$(ProjectDir).."
+    },
+    "imp (testdaten)": {
+      "commandName": "Project",
+      "commandLineArgs": "/imp",
+      "workingDirectory": "$(ProjectDir)..\\testdaten"
+    },
+    "show (testdaten)": {
+      "commandName": "Project",
+      "commandLineArgs": "/show",
+      "workingDirectory": "$(ProjectDir)..\\testdaten"
+    }
+  }
+}
